@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class TimeSystem : MonoBehaviour
 {
@@ -27,16 +28,21 @@ public class TimeSystem : MonoBehaviour
     private bool _hasUI = true;
 
     [SerializeField]
-    private Button btn_StartTime;
-
-    [SerializeField]
     private GameObject timerObject;
 
     [SerializeField]
     private Text txt_Timer;
 
+    [SerializeField]
+    private VideoPlayer _vPlayer;
+
     // Variables needed for timer
     private bool _timerIsRunning = false;
+    private bool _videoIsRunning = false;
+    public bool IsRunning
+    {
+        get { return (_timerIsRunning || _videoIsRunning); }
+    }
     private float _endTime = 120;
 
     // Variables needed to count time, other scripts can only read them
@@ -56,7 +62,6 @@ public class TimeSystem : MonoBehaviour
     {
         if(_hasUI)
         {
-            btn_StartTime.onClick.AddListener(StartTime);
             timerObject.gameObject.SetActive(false);
         }
     }
@@ -64,9 +69,10 @@ public class TimeSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_timerIsRunning)
+        if(_timerIsRunning || _videoIsRunning)
         {
-            _countSeconds += Time.deltaTime;
+            if (_videoIsRunning) _countSeconds = (float)_vPlayer.time;
+            if(_timerIsRunning) _countSeconds += Time.deltaTime;
 
             _currentSeconds = Mathf.FloorToInt(_countSeconds % 60);
             _currentMinutes = Mathf.FloorToInt(_countSeconds / 60);
@@ -77,32 +83,39 @@ public class TimeSystem : MonoBehaviour
             if(_countSeconds >= _endTime)
             {
                 _timerIsRunning = false;
-                
+                _videoIsRunning = false;
 
                 if (_hasUI)
                 {
                     timerObject.gameObject.SetActive(false);
-                    btn_StartTime.gameObject.SetActive(true);
                 }
             }
         }
     }
 
-    private void StartTime()
+    public void StartTime(float endTime)
     {
-        StartTime(30);
+        StartTimer(endTime);
+        _timerIsRunning = true;
     }
 
-    public void StartTime(float endTime)
+    public void StartVideo(VideoClip clip)
+    {
+        _vPlayer.clip = clip;
+        _vPlayer.Play();
+
+        StartTimer((float)clip.length);
+        _videoIsRunning = true;
+    }
+
+    private void StartTimer(float endTime)
     {
         if (_hasUI)
         {
             timerObject.gameObject.SetActive(true);
-            btn_StartTime.gameObject.SetActive(false);
         }
 
         _countSeconds = 0;
         _endTime = endTime;
-        _timerIsRunning = true;
     }
 }

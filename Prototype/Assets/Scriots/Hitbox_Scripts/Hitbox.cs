@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Hitbox : MonoBehaviour
 {
-    private bool _canShow = true;
-
+    private bool _canUseScript = true;
     private TimeSystem time;
 
     [Header("Start time")]
@@ -31,14 +30,14 @@ public class Hitbox : MonoBehaviour
         if(time == null)
         {
             Debug.LogError("The scene is missing a TimeSystem");
-            _canShow = false;
+            _canUseScript = false;
         }
 
         if(start_minute > end_minute ||
             start_minute == end_minute && start_second > end_second)
         {
             Debug.LogError("The hitbox " + name + " has a start time after end time");
-            _canShow = false;
+            _canUseScript = false;
         }
 
         box.SetActive(false);
@@ -47,7 +46,7 @@ public class Hitbox : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!_canShow) return;
+        if (!_canUseScript) return;
 
         if(Started && !Ended)
         {
