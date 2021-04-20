@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 229768866}
   - component: {fileID: 229768865}
   - component: {fileID: 229768864}
+  - component: {fileID: 229768868}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -218,6 +219,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &229768868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229768863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01c7495d267f5e94e8ee0787ff7cd1a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  start_minute: 0
+  start_second: 0
+  end_minute: 0
+  end_second: 0
 --- !u!1 &581426645
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,7 +426,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42073c493a87aca4888c91e9cf0ec922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hasUI: 1
   btn_StartTime: {fileID: 1408596987}
+  timerObject: {fileID: 1627554783}
   txt_Timer: {fileID: 581426647}
 --- !u!4 &1207522245
 Transform:

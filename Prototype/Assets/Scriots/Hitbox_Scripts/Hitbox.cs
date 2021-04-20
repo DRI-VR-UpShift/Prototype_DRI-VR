@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Hitbox : MonoBehaviour
 {
+    private bool _canShow = true;
+
     private TimeSystem time;
 
     [Header("Start time")]
@@ -18,19 +20,57 @@ public class Hitbox : MonoBehaviour
     [SerializeField]
     private int end_second;
 
+    [Header("The hitbox")]
+    [SerializeField]
+    private GameObject box;
+
     // Start is called before the first frame update
     void Start()
     {
         time = FindObjectOfType<TimeSystem>();
         if(time == null)
         {
-            Debug.Log("The scene is missing a TimeSystem");
+            Debug.LogError("The scene is missing a TimeSystem");
+            _canShow = false;
         }
+
+        if(start_minute > end_minute ||
+            start_minute == end_minute && start_second > end_second)
+        {
+            Debug.LogError("The hitbox " + name + " has a start time after end time");
+            _canShow = false;
+        }
+
+        box.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (!_canShow) return;
+
+        if(Started && !Ended)
+        {
+            box.SetActive(true);
+            return;
+        }
+
+        box.SetActive(false);
+    }
+
+    private bool Started
+    {
+        get
+        {
+            return start_minute < time.Minutes || start_minute == time.Minutes && start_second <= time.Seconds;
+        }
+    }
+
+    private bool Ended
+    {
+        get
+        {
+            return end_minute < time.Minutes || end_minute == time.Minutes && end_second <= time.Seconds;
+        }
     }
 }
