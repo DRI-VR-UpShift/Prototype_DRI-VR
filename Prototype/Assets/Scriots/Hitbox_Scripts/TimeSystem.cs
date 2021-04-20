@@ -24,68 +24,85 @@ public class TimeSystem : MonoBehaviour
     #endregion
 
     [SerializeField]
+    private bool _hasUI = true;
+
+    [SerializeField]
     private Button btn_StartTime;
+
+    [SerializeField]
+    private GameObject timerObject;
 
     [SerializeField]
     private Text txt_Timer;
 
     // Variables needed for timer
-    private bool timerIsRunning = false;
-    private float _timeSpeed = 1.0f;
-    private float _currentTimeRemaining = 1.0f;
+    private bool _timerIsRunning = false;
+    private float _endTime = 120;
 
     // Variables needed to count time, other scripts can only read them
-    private int currentSeconds = 0;
-    public int Seconds
+    private float _currentSeconds = 0;
+    public float Seconds
     {
-        get { return currentSeconds; }
+        get { return _currentSeconds; }
     }
-    private int currentMinutes = 0;
-    public int Minutes
+    private float _currentMinutes = 0;
+    public float Minutes
     {
-        get { return currentMinutes; }
+        get { return _currentMinutes; }
     }
+    private float _countSeconds = 0;
 
     void Start()
     {
-        btn_StartTime.onClick.AddListener(StartTime);
-        if (txt_Timer != null)  txt_Timer.gameObject.SetActive(false);
+        if(_hasUI)
+        {
+            btn_StartTime.onClick.AddListener(StartTime);
+            timerObject.gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(timerIsRunning)
+        if(_timerIsRunning)
         {
-            if (_currentTimeRemaining <= 0)
+            _countSeconds += Time.deltaTime;
+
+            _currentSeconds = Mathf.FloorToInt(_countSeconds % 60);
+            _currentMinutes = Mathf.FloorToInt(_countSeconds / 60);
+
+            if (_hasUI) txt_Timer.text = string.Format("{0:00}:{1:00}", _currentMinutes, _currentSeconds);
+
+            // Check if end time is reached
+            if(_countSeconds >= _endTime)
             {
-                _currentTimeRemaining = _timeSpeed;
+                _timerIsRunning = false;
+                
 
-                currentSeconds++;
-
-                // If counted an hour, start new hour
-                if (currentSeconds >= 60)
+                if (_hasUI)
                 {
-                    currentMinutes++;
-                    currentSeconds = 0;
+                    timerObject.gameObject.SetActive(false);
+                    btn_StartTime.gameObject.SetActive(true);
                 }
-
-                // Print to screen
-                if (txt_Timer != null)
-                {
-                    txt_Timer.text = currentMinutes.ToString("00") + ":" + currentSeconds.ToString("00");
-                }
-            }
-            else
-            {
-                _currentTimeRemaining -= Time.deltaTime;
             }
         }
     }
 
     private void StartTime()
     {
-        if(txt_Timer != null) txt_Timer.gameObject.SetActive(true);
-        timerIsRunning = true;
+        StartTime(30);
+    }
+
+    public void StartTime(float endTime)
+    {
+        if (_hasUI)
+        {
+            timerObject.gameObject.SetActive(true);
+            btn_StartTime.gameObject.SetActive(false);
+        }
+
+        _countSeconds = 0;
+        _endTime = endTime;
+        _timerIsRunning = true;
     }
 }
