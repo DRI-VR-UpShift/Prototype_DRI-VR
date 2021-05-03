@@ -5,71 +5,132 @@ using UnityEngine;
 public class Hitbox : MonoBehaviour
 {
     private bool _canUseScript = true;
-    private TimeSystem time;
-
-    [Header("Start time")]
-    [SerializeField]
-    private int start_minute;
-    [SerializeField]
-    private int start_second;
-
-    [Header("End time")]
-    [SerializeField]
-    private int end_minute;
-    [SerializeField]
-    private int end_second;
+    private TimeSystem _timeSystem;
+    public bool IsPlaying = false;
 
     [Header("The hitbox")]
     [SerializeField]
-    private GameObject box;
+    private GameObject _box;
+
+    [Header("Hitbox positions")]
+    [SerializeField]
+    private List<HitboxPosition> _positionList = new List<HitboxPosition>();
+
+    private int _index = 0;
+    private HitboxPosition _currentPositon = null;
+    private HitboxPosition CurrentPosition
+    {
+        set
+        {
+            _currentPositon = value;
+            _index++;
+        }
+    }
+    private HitboxPosition _nextPosition = null;
+    private HitboxPosition NextPosition
+    {
+        set
+        {
+            _nextPosition = value;
+            timeToReach = HitboxPosition.SecondsBetween(_currentPositon, _nextPosition);
+        }
+    }
+
+    private float timestep = 0;
+    private float timeToReach = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        time = FindObjectOfType<TimeSystem>();
-        if(time == null)
+        _timeSystem = FindObjectOfType<TimeSystem>();
+        if(_timeSystem == null)
         {
             Debug.LogError("The scene is missing a TimeSystem");
             _canUseScript = false;
         }
 
-        if(start_minute > end_minute ||
-            start_minute == end_minute && start_second > end_second)
+        if(_box == null)
         {
-            Debug.LogError("The hitbox " + name + " has a start time after end time");
+            Debug.LogError(name + " has no box attached to it");
             _canUseScript = false;
         }
+        else
+        {
+            _box.SetActive(false);
+        }
 
-        box.SetActive(false);
+        if(_positionList.Count <= 0)
+        {
+            Debug.LogError(name + " has no positions attached to it");
+            _canUseScript = false;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!_canUseScript) return;
+        if (!_canUseScript || !_timeSystem.IsRunning) return;
 
-        if(Started && !Ended)
+        if (_currentPositon == null)
         {
-            box.SetActive(true);
-            return;
-        }
+            _index = 0;
 
-        box.SetActive(false);
+            CurrentPosition = _positionList[_index];
+            NextPosition = _positionList[_index];
+
+            transform.position = _currentPositon.Pos;
+        }
+        else if (_nextPosition == null) return;
+        else if (_nextPosition.TimePassed(_timeSystem.Now))
+        {
+            CurrentPosition = _nextPosition;
+
+            if (_index >= _positionList.Count)
+            {
+                _box.SetActive(false);
+                _nextPosition = null;
+            }
+            else NextPosition = _positionList[_index];
+        }
+        else if (_currentPositon.TimePassed(_timeSystem.Now))
+        {
+            _box.SetActive(true);
+
+            timestep += Time.deltaTime / timeToReach;
+            transform.position = Vector3.Lerp(_currentPositon.Pos, _nextPosition.Pos, timestep);
+        }
     }
 
-    private bool Started
+    public void StartHitbox()
     {
-        get
-        {
-            return start_minute < time.Minutes || start_minute == time.Minutes && start_second <= time.Seconds;
-        }
+        _currentPositon = null;
+    }
+}
+
+[System.Serializable]
+public class HitboxPosition
+{
+    [SerializeField]
+    private TimeStamp _time;
+    public TimeStamp TimePosition
+    {
+        get { return _time; }
     }
 
-    private bool Ended
+    [SerializeField]
+    private Vector3 _position;
+    public Vector3 Pos
     {
-        get
-        {
-            return end_minute < time.Minutes || end_minute == time.Minutes && end_second <= time.Seconds;
-        }
+        get { return _position; }
+    }
+
+    public bool TimePassed(TimeStamp time)
+    {
+        return _time.IsBefore(time);
+    }
+
+    public static int SecondsBetween(HitboxPosition startPos, HitboxPosition endPos)
+    {
+        return TimeStamp.TimeBetween(startPos.TimePosition, endPos.TimePosition);
     }
 }

@@ -36,6 +36,10 @@ public class TimeSystem : MonoBehaviour
     [SerializeField]
     private VideoPlayer _vPlayer;
 
+    [SerializeField]
+    private Transform parent_hitboxes;
+    private Hitbox[] hitboxList;
+
     // Variables needed for timer
     private bool _timerIsRunning = false;
     private bool _videoIsRunning = false;
@@ -46,17 +50,17 @@ public class TimeSystem : MonoBehaviour
     private float _endTime = 120;
 
     // Variables needed to count time, other scripts can only read them
-    private float _currentSeconds = 0;
-    public float Seconds
-    {
-        get { return _currentSeconds; }
-    }
-    private float _currentMinutes = 0;
-    public float Minutes
-    {
-        get { return _currentMinutes; }
-    }
     private float _countSeconds = 0;
+    public float CurrentSeconds
+    {
+        get { return _countSeconds; }
+    }
+
+    private TimeStamp _currentTime = new TimeStamp(0, 0);
+    public TimeStamp Now
+    {
+        get { return _currentTime; }
+    }
 
     void Start()
     {
@@ -64,6 +68,8 @@ public class TimeSystem : MonoBehaviour
         {
             timerObject.gameObject.SetActive(false);
         }
+
+        hitboxList = parent_hitboxes.GetComponentsInChildren<Hitbox>();
     }
 
     // Update is called once per frame
@@ -74,10 +80,9 @@ public class TimeSystem : MonoBehaviour
             if (_videoIsRunning) _countSeconds = (float)_vPlayer.time;
             if(_timerIsRunning) _countSeconds += Time.deltaTime;
 
-            _currentSeconds = Mathf.FloorToInt(_countSeconds % 60);
-            _currentMinutes = Mathf.FloorToInt(_countSeconds / 60);
+            _currentTime = new TimeStamp(_countSeconds);
 
-            if (_hasUI) txt_Timer.text = string.Format("{0:00}:{1:00}", _currentMinutes, _currentSeconds);
+            if (_hasUI) txt_Timer.text = _currentTime.ToString();
 
             // Check if end time is reached
             if(_countSeconds >= _endTime)
@@ -97,6 +102,8 @@ public class TimeSystem : MonoBehaviour
     {
         StartTimer(endTime);
         _timerIsRunning = true;
+
+        StartHitboxes();
     }
 
     public void StartVideo(VideoClip clip)
@@ -106,6 +113,16 @@ public class TimeSystem : MonoBehaviour
 
         StartTimer((float)clip.length);
         _videoIsRunning = true;
+
+        StartHitboxes();
+    }
+
+    public void StartHitboxes()
+    {
+        foreach(Hitbox item in hitboxList)
+        {
+            item.StartHitbox();
+        }
     }
 
     private void StartTimer(float endTime)
@@ -117,5 +134,60 @@ public class TimeSystem : MonoBehaviour
 
         _countSeconds = 0;
         _endTime = endTime;
+    }
+}
+
+[System.Serializable]
+public class TimeStamp
+{
+    [SerializeField]
+    private int _minutes;
+    public int Min
+    {
+        get { return _minutes; }
+    }
+
+    [SerializeField]
+    private int _seconds;
+    public int Sec
+    {
+        get { return _seconds; }
+    }
+
+    public TimeStamp() { }
+
+    public TimeStamp(int min, int sec)
+    {
+        _minutes = min;
+        _seconds = sec;
+    }
+
+    public TimeStamp(float seconds)
+    {
+        _minutes = Mathf.FloorToInt(seconds / 60);
+        _seconds = Mathf.FloorToInt(seconds % 60);
+    }
+
+    public override string ToString()
+    {
+        return string.Format("{0:00}:{1:00}", _minutes, _seconds);
+    }
+
+    public bool IsBefore(TimeStamp time)
+    {
+        return _minutes < time.Min || _minutes == time.Min && _seconds <= time.Sec;
+    }
+
+    public int GetTimeInSeconds()
+    {
+        return (Min * 60) + Sec;
+    }
+
+    public static int TimeBetween(TimeStamp start, TimeStamp end)
+    {
+        int startSeconds = start.GetTimeInSeconds();
+        int endSeconds = end.GetTimeInSeconds();
+
+        return endSeconds - startSeconds;
     }
 }
