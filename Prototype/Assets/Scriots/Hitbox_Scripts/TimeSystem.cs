@@ -148,15 +148,15 @@ public class TimeStamp
     }
 
     [SerializeField]
-    private int _seconds;
-    public int Sec
+    private float _seconds;
+    public float Sec
     {
         get { return _seconds; }
     }
 
     public TimeStamp() { }
 
-    public TimeStamp(int min, int sec)
+    public TimeStamp(int min, float sec)
     {
         _minutes = min;
         _seconds = sec;
@@ -178,15 +178,15 @@ public class TimeStamp
         return _minutes < time.Min || _minutes == time.Min && _seconds <= time.Sec;
     }
 
-    public int GetTimeInSeconds()
+    public float GetTimeInSeconds()
     {
         return (Min * 60) + Sec;
     }
 
-    public static int TimeBetween(TimeStamp start, TimeStamp end)
+    public static float TimeBetween(TimeStamp start, TimeStamp end)
     {
-        int startSeconds = start.GetTimeInSeconds();
-        int endSeconds = end.GetTimeInSeconds();
+        float startSeconds = start.GetTimeInSeconds();
+        float endSeconds = end.GetTimeInSeconds();
 
         return endSeconds - startSeconds;
     }

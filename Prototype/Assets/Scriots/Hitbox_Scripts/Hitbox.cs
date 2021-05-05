@@ -6,7 +6,7 @@ public class Hitbox : MonoBehaviour
 {
     private bool _canUseScript = true;
     private TimeSystem _timeSystem;
-    public bool IsPlaying = false;
+    [HideInInspector] public bool IsPlaying = false;
 
     [Header("The hitbox")]
     [SerializeField]
@@ -129,7 +129,7 @@ public class HitboxPosition
         return _time.IsBefore(time);
     }
 
-    public static int SecondsBetween(HitboxPosition startPos, HitboxPosition endPos)
+    public static float SecondsBetween(HitboxPosition startPos, HitboxPosition endPos)
     {
         return TimeStamp.TimeBetween(startPos.TimePosition, endPos.TimePosition);
     }
