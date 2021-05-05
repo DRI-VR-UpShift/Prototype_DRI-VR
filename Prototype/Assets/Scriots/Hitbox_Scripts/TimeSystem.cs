@@ -165,12 +165,13 @@ public class TimeStamp
     public TimeStamp(float seconds)
     {
         _minutes = Mathf.FloorToInt(seconds / 60);
-        _seconds = Mathf.FloorToInt(seconds % 60);
+        _seconds = seconds % 60;
     }
 
     public override string ToString()
     {
-        return string.Format("{0:00}:{1:00}", _minutes, _seconds);
+        float hundredths = (_seconds * 100) % 100;
+        return string.Format("{0:00}:{1:00}:{2:00}", _minutes, _seconds, hundredths);
     }
 
     public bool IsBefore(TimeStamp time)
