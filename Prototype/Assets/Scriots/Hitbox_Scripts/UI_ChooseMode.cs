@@ -31,6 +31,8 @@ public class UI_ChooseMode : MonoBehaviour
 
     private void StartTimer(Mode thisMode)
     {
+        if (!_canUseScript) return;
+
         if (slider_video.value < 1) time.StartVideo(clip, thisMode);
         else time.StartTime(time_duration, thisMode);
 

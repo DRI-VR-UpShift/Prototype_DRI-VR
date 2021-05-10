@@ -21,7 +21,7 @@ public class Hitbox : MonoBehaviour
     private List<HitboxPosition> _positionList = new List<HitboxPosition>();
 
     private int _index = 0;
-    private HitboxPosition _currentPositon = null;
+    
     private HitboxPosition CurrentPosition
     {
         set
@@ -30,7 +30,8 @@ public class Hitbox : MonoBehaviour
             _index++;
         }
     }
-    private HitboxPosition _nextPosition = null;
+    private HitboxPosition _currentPositon = null;
+    
     private HitboxPosition NextPosition
     {
         set
@@ -39,6 +40,7 @@ public class Hitbox : MonoBehaviour
             timeToReach = HitboxPosition.SecondsBetween(_currentPositon, _nextPosition);
         }
     }
+    private HitboxPosition _nextPosition = null;
 
     private float timestep = 0;
     private float timeToReach = 0;
@@ -128,6 +130,21 @@ public class Hitbox : MonoBehaviour
     {
         currentMode = thisMode;
         _currentPositon = null;
+    }
+
+    public void HighlightBox()
+    {
+        
+    }
+
+    public void SelectBox()
+    {
+        Debug.Log("Select box");
+    }
+
+    public void ResetBox()
+    {
+
     }
 }
 

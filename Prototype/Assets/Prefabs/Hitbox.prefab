@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3355499424597132275}
   - component: {fileID: 3355499424597132272}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,6 +46,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsPlaying: 0
   _box: {fileID: 3355499425010486170}
+  stopVideoAt:
+    _time:
+      _minutes: 0
+      _seconds: 0
+    _position: {x: 0, y: 0, z: 0}
   _positionList:
   - _time:
       _minutes: 0
@@ -67,7 +72,7 @@ GameObject:
   - component: {fileID: 3355499425010486183}
   - component: {fileID: 3355499425010486180}
   - component: {fileID: 3355499425010486181}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
