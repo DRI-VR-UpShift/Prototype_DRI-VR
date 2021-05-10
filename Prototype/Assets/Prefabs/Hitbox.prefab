@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsPlaying: 0
-  _box: {fileID: 3355499425010486170}
+  _box: {fileID: 4987784804909871334}
   stopVideoAt:
     _time:
       _minutes: 0
@@ -72,6 +72,7 @@ GameObject:
   - component: {fileID: 3355499425010486183}
   - component: {fileID: 3355499425010486180}
   - component: {fileID: 3355499425010486181}
+  - component: {fileID: 4987784804909871334}
   m_Layer: 6
   m_Name: Box
   m_TagString: Untagged
@@ -155,3 +156,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4987784804909871334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3355499425010486170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0a6d902f5b19a48b6d3f51db9ce37b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_correct: {fileID: 2100000, guid: ef66acc131b6dcc4c85c6383bb4ef814, type: 2}
+  m_wrong: {fileID: 2100000, guid: 1bbf1feb9491dc44cab4d551b3d4a783, type: 2}

@@ -10,7 +10,7 @@ public class Hitbox : MonoBehaviour
 
     [Header("The hitbox")]
     [SerializeField]
-    private GameObject _box;
+    private Result_hitbox _box;
 
     [Header("Stop the video at time")]
     [SerializeField]
@@ -45,7 +45,15 @@ public class Hitbox : MonoBehaviour
     private float timestep = 0;
     private float timeToReach = 0;
 
+    public bool HasBeenHit
+    {
+        get { return hasbeenselected; }
+    }
+    private bool hasbeenselected = false;
+
     private Mode currentMode = null;
+
+    private bool hastakenbreak = false;
 
     // Start is called before the first frame update
     void Start()
@@ -64,7 +72,7 @@ public class Hitbox : MonoBehaviour
         }
         else
         {
-            _box.SetActive(false);
+            _box.gameObject.SetActive(false);
         }
 
         if(_positionList.Count <= 0)
@@ -83,9 +91,18 @@ public class Hitbox : MonoBehaviour
         {
             if(stopVideoAt != null && stopVideoAt.TimePassed(_timeSystem.Now))
             {
-                _timeSystem.StartBreak();
-                _box.SetActive(true);
-                transform.position = stopVideoAt.Pos;
+                if (!hastakenbreak)
+                {
+                    _timeSystem.StartBreak();
+                    _box.gameObject.SetActive(true);
+                    transform.position = stopVideoAt.Pos;
+                    hastakenbreak = true;
+                }
+                else if (!_timeSystem.IsTakingBreak)
+                {
+                    _box.IsNotHit();
+                    _box.gameObject.SetActive(false);
+                }
             }
         }
         else
@@ -96,6 +113,8 @@ public class Hitbox : MonoBehaviour
 
     private void SetHitboxAtPosition()
     {
+        if (_timeSystem.IsTakingBreak) return;
+
         if (_currentPositon == null)
         {
             _index = 0;
@@ -112,14 +131,15 @@ public class Hitbox : MonoBehaviour
 
             if (_index >= _positionList.Count)
             {
-                _box.SetActive(false);
+                if (!hasbeenselected) _box.IsNotHit();
+                _box.gameObject.SetActive(false);
                 _nextPosition = null;
             }
             else NextPosition = _positionList[_index];
         }
         else if (_currentPositon.TimePassed(_timeSystem.Now))
         {
-            _box.SetActive(true);
+            _box.gameObject.SetActive(true);
 
             timestep += Time.deltaTime / timeToReach;
             transform.position = Vector3.Lerp(_currentPositon.Pos, _nextPosition.Pos, timestep);
@@ -130,6 +150,9 @@ public class Hitbox : MonoBehaviour
     {
         currentMode = thisMode;
         _currentPositon = null;
+        hasbeenselected = false;
+        hastakenbreak = false;
+        _box.Reset();
     }
 
     public void HighlightBox()
@@ -139,7 +162,8 @@ public class Hitbox : MonoBehaviour
 
     public void SelectBox()
     {
-        Debug.Log("Select box");
+        _box.IsHit();
+        hasbeenselected = true;
     }
 
     public void ResetBox()

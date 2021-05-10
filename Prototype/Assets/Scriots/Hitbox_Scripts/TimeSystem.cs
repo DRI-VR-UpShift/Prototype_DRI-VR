@@ -40,24 +40,32 @@ public class TimeSystem : MonoBehaviour
     private Transform parent_hitboxes;
     private Hitbox[] hitboxList;
 
+    [SerializeField]
+    private Input_Manager input;
+
     // Variables needed for timer
-    private bool _timerIsRunning = false;
-    private bool _videoIsRunning = false;
-    private bool _takebreak = false;
     public bool IsRunning
     {
         get { return (_timerIsRunning || _videoIsRunning); }
     }
+    private bool _timerIsRunning = false;
+    private bool _videoIsRunning = false;
+    
+    public bool IsTakingBreak
+    {
+        get { return _takebreak; }
+    }
+    private bool _takebreak = false;
 
     // To stop at this time
     private float _endTime = 120;
 
     // Variables needed to count time, other scripts can only read them
-    private float _countSeconds = 0;
     public float CurrentSeconds
     {
         get { return _countSeconds; }
     }
+    private float _countSeconds = 0;
 
     private TimeStamp _currentTime = new TimeStamp(0, 0);
     public TimeStamp Now
@@ -130,7 +138,9 @@ public class TimeSystem : MonoBehaviour
 
     public void StartHitboxes(Mode thisMode)
     {
-        foreach(Hitbox item in hitboxList)
+        input.CurrentMode = thisMode;
+
+        foreach (Hitbox item in hitboxList)
         {
             item.StartHitbox(thisMode);
         }
@@ -139,13 +149,15 @@ public class TimeSystem : MonoBehaviour
     public void StartBreak()
     {
         _takebreak = true;
-        _vPlayer.Pause();
+
+        if (_videoIsRunning) _vPlayer.Pause();
     }
 
     public void StopBreak()
     {
         _takebreak = false;
-        _vPlayer.Play();
+
+        if(_videoIsRunning) _vPlayer.Play();
     }
 
     private void StartTimer(float endTime)
@@ -175,6 +187,11 @@ public class TimeStamp
     public float Sec
     {
         get { return _seconds; }
+    }
+
+    public TimeStamp GetLater()
+    {
+        return new TimeStamp(_minutes, _seconds++);
     }
 
     public TimeStamp() { }
