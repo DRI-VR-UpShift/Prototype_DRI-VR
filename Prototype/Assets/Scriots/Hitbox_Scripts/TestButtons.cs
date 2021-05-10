@@ -47,7 +47,7 @@ public class TestButtons : MonoBehaviour
     {
         if (!_canUseScript) return;
 
-        time.StartTime(timeduration);
+        time.StartTime(timeduration, new Mode());
         _buttonList.SetActive(false);
         _isRunningTimer = true;
     }
@@ -56,7 +56,7 @@ public class TestButtons : MonoBehaviour
     {
         if (!_canUseScript) return;
 
-        time.StartVideo(clip);
+        time.StartVideo(clip, new Mode());
         _buttonList.SetActive(false);
         _isRunningTimer = true;
     }

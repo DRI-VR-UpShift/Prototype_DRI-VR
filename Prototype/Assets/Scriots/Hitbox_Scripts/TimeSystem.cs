@@ -43,10 +43,13 @@ public class TimeSystem : MonoBehaviour
     // Variables needed for timer
     private bool _timerIsRunning = false;
     private bool _videoIsRunning = false;
+    private bool _takebreak = false;
     public bool IsRunning
     {
         get { return (_timerIsRunning || _videoIsRunning); }
     }
+
+    // To stop at this time
     private float _endTime = 120;
 
     // Variables needed to count time, other scripts can only read them
@@ -62,6 +65,9 @@ public class TimeSystem : MonoBehaviour
         get { return _currentTime; }
     }
 
+    [SerializeField]
+    public GameObject _btn_menu;
+
     void Start()
     {
         if(_hasUI)
@@ -75,7 +81,7 @@ public class TimeSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_timerIsRunning || _videoIsRunning)
+        if((_timerIsRunning || _videoIsRunning) && !_takebreak)
         {
             if (_videoIsRunning) _countSeconds = (float)_vPlayer.time;
             if(_timerIsRunning) _countSeconds += Time.deltaTime;
@@ -94,19 +100,24 @@ public class TimeSystem : MonoBehaviour
                 {
                     timerObject.gameObject.SetActive(false);
                 }
+
+                if(_btn_menu != null)
+                {
+                    _btn_menu.SetActive(true);
+                }
             }
         }
     }
 
-    public void StartTime(float endTime)
+    public void StartTime(float endTime, Mode thisMode)
     {
         StartTimer(endTime);
         _timerIsRunning = true;
 
-        StartHitboxes();
+        StartHitboxes(thisMode);
     }
 
-    public void StartVideo(VideoClip clip)
+    public void StartVideo(VideoClip clip, Mode thisMode)
     {
         _vPlayer.clip = clip;
         _vPlayer.Play();
@@ -114,15 +125,27 @@ public class TimeSystem : MonoBehaviour
         StartTimer((float)clip.length);
         _videoIsRunning = true;
 
-        StartHitboxes();
+        StartHitboxes(thisMode);
     }
 
-    public void StartHitboxes()
+    public void StartHitboxes(Mode thisMode)
     {
         foreach(Hitbox item in hitboxList)
         {
-            item.StartHitbox();
+            item.StartHitbox(thisMode);
         }
+    }
+
+    public void StartBreak()
+    {
+        _takebreak = true;
+        _vPlayer.Pause();
+    }
+
+    public void StopBreak()
+    {
+        _takebreak = false;
+        _vPlayer.Play();
     }
 
     private void StartTimer(float endTime)

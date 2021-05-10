@@ -12,6 +12,10 @@ public class Hitbox : MonoBehaviour
     [SerializeField]
     private GameObject _box;
 
+    [Header("Stop the video at time")]
+    [SerializeField]
+    private HitboxPosition stopVideoAt = new HitboxPosition();
+
     [Header("Hitbox positions")]
     [SerializeField]
     private List<HitboxPosition> _positionList = new List<HitboxPosition>();
@@ -38,6 +42,8 @@ public class Hitbox : MonoBehaviour
 
     private float timestep = 0;
     private float timeToReach = 0;
+
+    private Mode currentMode = null;
 
     // Start is called before the first frame update
     void Start()
@@ -71,6 +77,23 @@ public class Hitbox : MonoBehaviour
     {
         if (!_canUseScript || !_timeSystem.IsRunning) return;
 
+        if(currentMode is ModeSystemstop)
+        {
+            if(stopVideoAt != null && stopVideoAt.TimePassed(_timeSystem.Now))
+            {
+                _timeSystem.StartBreak();
+                _box.SetActive(true);
+                transform.position = stopVideoAt.Pos;
+            }
+        }
+        else
+        {
+            SetHitboxAtPosition();
+        }
+    }
+
+    private void SetHitboxAtPosition()
+    {
         if (_currentPositon == null)
         {
             _index = 0;
@@ -101,8 +124,9 @@ public class Hitbox : MonoBehaviour
         }
     }
 
-    public void StartHitbox()
+    public void StartHitbox(Mode thisMode)
     {
+        currentMode = thisMode;
         _currentPositon = null;
     }
 }
