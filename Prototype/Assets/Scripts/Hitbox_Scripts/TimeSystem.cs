@@ -98,7 +98,7 @@ public class TimeSystem : MonoBehaviour
             float lastcoundseconds = _countSeconds;
             if (_videoIsRunning) _countSeconds = (float)_vPlayer.time;
             if(_timerIsRunning) _countSeconds += Time.deltaTime;
-            currentStep = lastcoundseconds - _countSeconds;
+            currentStep = _countSeconds - lastcoundseconds;
 
             _currentTime = new TimeStamp(_countSeconds);
 

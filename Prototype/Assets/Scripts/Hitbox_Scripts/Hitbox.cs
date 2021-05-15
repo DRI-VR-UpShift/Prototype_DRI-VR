@@ -37,7 +37,10 @@ public class Hitbox : MonoBehaviour
         set
         {
             _nextPosition = value;
+
+            // Reset time stuff
             timeToReach = HitboxPosition.SecondsBetween(_currentPositon, _nextPosition);
+            timestep = 0;
         }
     }
     private HitboxPosition _nextPosition = null;
