@@ -13,7 +13,7 @@ public class TestButtons : MonoBehaviour
     private float timeduration;
 
     [SerializeField]
-    private VideoClip clip;
+    private Scenario scenario;
 
     [SerializeField]
     private GameObject _buttonList;
@@ -47,7 +47,7 @@ public class TestButtons : MonoBehaviour
     {
         if (!_canUseScript) return;
 
-        time.StartTime(timeduration, new Mode());
+        time.StartTime(new Mode(), scenario);
         _buttonList.SetActive(false);
         _isRunningTimer = true;
     }
@@ -56,7 +56,7 @@ public class TestButtons : MonoBehaviour
     {
         if (!_canUseScript) return;
 
-        time.StartVideo(clip, new Mode());
+        time.StartVideo(new Mode(), scenario);
         _buttonList.SetActive(false);
         _isRunningTimer = true;
     }

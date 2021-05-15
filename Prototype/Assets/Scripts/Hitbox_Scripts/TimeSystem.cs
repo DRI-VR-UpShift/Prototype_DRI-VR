@@ -37,11 +37,9 @@ public class TimeSystem : MonoBehaviour
     private VideoPlayer _vPlayer;
 
     [SerializeField]
-    private Transform parent_hitboxes;
-    private Hitbox[] hitboxList;
-
-    [SerializeField]
     private Input_Manager input;
+
+    private Scenario currentScenario;
 
     // Variables needed for timer
     public bool IsRunning
@@ -73,8 +71,16 @@ public class TimeSystem : MonoBehaviour
         get { return _currentTime; }
     }
 
+    private float currentStep = 0;
+    public float TimeStep
+    {
+        get { return currentStep; }
+    }
+
     [SerializeField]
     public GameObject _btn_menu;
+    [SerializeField]
+    private Screen_Results result_menu;
 
     void Start()
     {
@@ -82,8 +88,6 @@ public class TimeSystem : MonoBehaviour
         {
             timerObject.gameObject.SetActive(false);
         }
-
-        hitboxList = parent_hitboxes.GetComponentsInChildren<Hitbox>();
     }
 
     // Update is called once per frame
@@ -91,8 +95,10 @@ public class TimeSystem : MonoBehaviour
     {
         if((_timerIsRunning || _videoIsRunning) && !_takebreak)
         {
+            float lastcoundseconds = _countSeconds;
             if (_videoIsRunning) _countSeconds = (float)_vPlayer.time;
             if(_timerIsRunning) _countSeconds += Time.deltaTime;
+            currentStep = lastcoundseconds - _countSeconds;
 
             _currentTime = new TimeStamp(_countSeconds);
 
@@ -109,41 +115,40 @@ public class TimeSystem : MonoBehaviour
                     timerObject.gameObject.SetActive(false);
                 }
 
-                if(_btn_menu != null)
+                if(result_menu != null)
                 {
-                    _btn_menu.SetActive(true);
+                    result_menu.ShowResults(currentScenario.Correct, currentScenario.Total);
+                    result_menu.gameObject.SetActive(true);
                 }
             }
         }
     }
 
-    public void StartTime(float endTime, Mode thisMode)
+    public void StartTime(Mode thisMode, Scenario thisScenario)
     {
-        StartTimer(endTime);
+        StartTimer(60);
         _timerIsRunning = true;
 
-        StartHitboxes(thisMode);
+        StartHitboxes(thisMode, thisScenario);
     }
 
-    public void StartVideo(VideoClip clip, Mode thisMode)
+    public void StartVideo(Mode thisMode, Scenario thisScenario)
     {
-        _vPlayer.clip = clip;
+        _vPlayer.clip = thisScenario.Clip;
         _vPlayer.Play();
 
-        StartTimer((float)clip.length);
+        StartTimer(thisScenario.Time);
         _videoIsRunning = true;
 
-        StartHitboxes(thisMode);
+        StartHitboxes(thisMode, thisScenario);
     }
 
-    public void StartHitboxes(Mode thisMode)
+    public void StartHitboxes(Mode thisMode, Scenario scenario)
     {
         input.CurrentMode = thisMode;
 
-        foreach (Hitbox item in hitboxList)
-        {
-            item.StartHitbox(thisMode);
-        }
+        currentScenario = scenario;
+        currentScenario.StartScenario(thisMode);
     }
 
     public void StartBreak()

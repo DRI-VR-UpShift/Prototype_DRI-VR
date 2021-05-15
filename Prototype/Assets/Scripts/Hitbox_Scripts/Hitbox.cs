@@ -141,7 +141,7 @@ public class Hitbox : MonoBehaviour
         {
             _box.gameObject.SetActive(true);
 
-            timestep += Time.deltaTime / timeToReach;
+            timestep += _timeSystem.TimeStep / timeToReach;
             transform.position = Vector3.Lerp(_currentPositon.Pos, _nextPosition.Pos, timestep);
         }
     }
