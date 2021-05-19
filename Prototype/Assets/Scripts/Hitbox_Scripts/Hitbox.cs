@@ -155,7 +155,7 @@ public class Hitbox : MonoBehaviour
         _currentPositon = null;
         hasbeenselected = false;
         hastakenbreak = false;
-        _box.Reset();
+        _box.ResetResults();
     }
 
     public void HighlightBox()

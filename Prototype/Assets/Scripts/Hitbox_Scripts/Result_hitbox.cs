@@ -36,8 +36,10 @@ public class Result_hitbox : MonoBehaviour
         _hasResult = true;
     }
 
-    public void Reset()
+    public void ResetResults()
     {
+        if (box_renderer == null) return;
+
         box_renderer.material = m_standard;
         _hasResult = false;
     }
