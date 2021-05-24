@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_Results : MonoBehaviour
+public class UI_Feedback : MonoBehaviour
 {
     public Mode CurrentMode
     {

@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Screen_Results : MonoBehaviour
+public class UI_Results : MonoBehaviour
 {
-    [SerializeField]
-    private Text txt_Correct;
-    [SerializeField]
-    private Text txt_Total;
+    [SerializeField] private Text txt_Correct;
+    [SerializeField] private Text txt_Total;
 
     [SerializeField]
     UI_ChooseMode chooseMenu;

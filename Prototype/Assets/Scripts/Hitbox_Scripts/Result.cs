@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Result : MonoBehaviour
+public class Result_hitbox : MonoBehaviour
 {
     private Renderer box_renderer;
 

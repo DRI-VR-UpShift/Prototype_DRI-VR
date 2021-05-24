@@ -204,7 +204,7 @@ MonoBehaviour:
   txt_Timer: {fileID: 3467345156157731754}
   _vPlayer: {fileID: 0}
   input: {fileID: 0}
-  ui_results: {fileID: 7972081283698855491}
+  ui_feedback: {fileID: 7972081283698855491}
   _btn_menu: {fileID: 0}
   result_menu: {fileID: 0}
 --- !u!1 &3467345155073682850
@@ -296,7 +296,7 @@ GameObject:
   - component: {fileID: 3467345155165842649}
   - component: {fileID: 3467345155165842654}
   m_Layer: 5
-  m_Name: Canvas_Timer
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -553,7 +553,7 @@ GameObject:
   - component: {fileID: 4671939478802542441}
   - component: {fileID: 7972081283698855491}
   m_Layer: 5
-  m_Name: Screen_Results
+  m_Name: Screen_Feedback
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

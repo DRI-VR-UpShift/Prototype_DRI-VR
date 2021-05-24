@@ -31,7 +31,7 @@ public class TimeSystem : MonoBehaviour
     [SerializeField] private Input_Manager input;
 
     private Scenario currentScenario;
-    [SerializeField] private UI_Results ui_results;
+    [SerializeField] private UI_Feedback ui_feedback;
 
     // Variables needed for timer
     public bool IsRunning
@@ -72,7 +72,7 @@ public class TimeSystem : MonoBehaviour
     private float currentStep = 0;
 
     [SerializeField] private GameObject _btn_menu;
-    [SerializeField] private Screen_Results result_menu;
+    [SerializeField] private UI_Results result_menu;
 
     void Start()
     {
@@ -142,7 +142,7 @@ public class TimeSystem : MonoBehaviour
         currentScenario = scenario;
         currentScenario.StartScenario(thisMode);
 
-        ui_results.CurrentMode = thisMode;
+        ui_feedback.CurrentMode = thisMode;
     }
 
     public void StartBreak()
