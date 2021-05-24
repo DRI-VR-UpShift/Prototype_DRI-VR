@@ -14,25 +14,33 @@ public class Result_hitbox : MonoBehaviour
 
     private bool _hasResult = false;
 
+    private UI_Results ui_result;
+
     void Start()
     {
         box_renderer = GetComponent<Renderer>();
         m_standard = box_renderer.material;
+
+        ui_result = GameObject.FindObjectOfType<UI_Results>();
     }
 
-    public void IsHit()
-    {
-        if (_hasResult) return;
-
-        box_renderer.material = m_correct;
-        _hasResult = true;
-    }
-
-    public void IsNotHit()
+    public void IsWrong(string explanation)
     {
         if (_hasResult) return;
 
         box_renderer.material = m_wrong;
+        if (ui_result != null) ui_result.ShowResult(false, explanation);
+
+        _hasResult = true;
+    }
+
+    public void IsCorrect(string explanation)
+    {
+        if (_hasResult) return;
+
+        box_renderer.material = m_correct;
+        if (ui_result != null) ui_result.ShowResult(true, explanation);
+
         _hasResult = true;
     }
 

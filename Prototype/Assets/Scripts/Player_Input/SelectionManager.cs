@@ -4,14 +4,28 @@ using UnityEngine;
 
 public class SelectionManager : MonoBehaviour
 {
+    private bool _canUseScript = true;
+    private TimeSystem _timeSystem;
+
     [SerializeField]
     private LayerMask hitboxMask;
 
     private Hitbox highlighted_box;
-    private Hitbox selected_box;
+
+    void Start()
+    {
+        _timeSystem = FindObjectOfType<TimeSystem>();
+        if (_timeSystem == null)
+        {
+            Debug.LogError("The scene is missing a TimeSystem");
+            _canUseScript = false;
+        }
+    }
 
     void Update()
     {
+        if (!_canUseScript) return;
+
         // Detect if we can select item
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
         RaycastHit hit;
@@ -21,29 +35,18 @@ public class SelectionManager : MonoBehaviour
             Hitbox box = selection.parent.GetComponent<Hitbox>();
             if (box != null)
             {
-                box.HighlightBox();
                 highlighted_box = box;
             }
         }
         else if (highlighted_box != null)
         {
-            highlighted_box.ResetBox();
             highlighted_box = null;
         }
 
         // Select item
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && highlighted_box != null)
         {
-            if(highlighted_box != null)
-            {
-                selected_box = highlighted_box;
-                selected_box.SelectBox();
-                highlighted_box = null;
-            }
-            else if(selected_box != null)
-            {
-                selected_box = null;
-            }
+            _timeSystem.Hit(highlighted_box);
         }
     }
 }

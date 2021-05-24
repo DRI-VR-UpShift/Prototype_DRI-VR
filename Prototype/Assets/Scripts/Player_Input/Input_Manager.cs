@@ -40,7 +40,6 @@ public class Input_Manager : MonoBehaviour
             else if((currentMode is ModePlayerstop || currentMode is ModeSystemstop) && _timeSystem.IsTakingBreak)
             {
                 Debug.Log("Select box");
-                _timeSystem.StopBreak();
                 SelectHitbox();
             }
             else if (currentMode is ModeFeedbackAfter || currentMode is ModeFeedbackDuring)
@@ -52,17 +51,17 @@ public class Input_Manager : MonoBehaviour
 
     public void SelectHitbox()
     {
+        Hitbox box = null;
+
         // Detect if we can select item
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, hitboxMask))
+        if (Physics.Raycast(ray, out hit, 500, hitboxMask))
         {
             Transform selection = hit.transform;
-            Hitbox box = selection.parent.GetComponent<Hitbox>();
-            if (box != null)
-            {
-                box.SelectBox();
-            }
+            box = selection.parent.GetComponent<Hitbox>();
         }
+
+        _timeSystem.Hit(box);
     }
 }

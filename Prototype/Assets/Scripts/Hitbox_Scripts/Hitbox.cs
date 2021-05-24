@@ -9,8 +9,15 @@ public class Hitbox : MonoBehaviour
     [HideInInspector] public bool IsPlaying = false;
 
     [Header("The hitbox")]
-    [SerializeField]
-    private Result_hitbox _box;
+    [SerializeField] private Result_hitbox _box;
+
+    public bool ShouldHit
+    {
+        get { return hit_this_box; }
+    }
+    [SerializeField] private bool hit_this_box = true;
+
+    [SerializeField] private string hitbox_feedback = "There is something to be said about hitting this box";
 
     [Header("Stop the video at time")]
     [SerializeField]
@@ -21,7 +28,7 @@ public class Hitbox : MonoBehaviour
     private List<HitboxPosition> _positionList = new List<HitboxPosition>();
 
     private int _index = 0;
-    
+
     private HitboxPosition CurrentPosition
     {
         set
@@ -56,7 +63,17 @@ public class Hitbox : MonoBehaviour
 
     private Mode currentMode = null;
 
+    public bool TakenBreak
+    {
+        get { return hastakenbreak; }
+    }
     private bool hastakenbreak = false;
+
+    public bool HasResult
+    {
+        get { return hasResult; }
+    }
+    private bool hasResult = false;
 
     // Start is called before the first frame update
     void Start()
@@ -92,25 +109,30 @@ public class Hitbox : MonoBehaviour
 
         if(currentMode is ModeSystemstop)
         {
-            if(stopVideoAt != null && stopVideoAt.TimePassed(_timeSystem.Now))
-            {
-                if (!hastakenbreak)
-                {
-                    _timeSystem.StartBreak();
-                    _box.gameObject.SetActive(true);
-                    transform.position = stopVideoAt.Pos;
-                    hastakenbreak = true;
-                }
-                else if (!_timeSystem.IsTakingBreak)
-                {
-                    _box.IsNotHit();
-                    _box.gameObject.SetActive(false);
-                }
-            }
+            CheckSystemStop();
         }
         else
         {
             SetHitboxAtPosition();
+        }
+    }
+
+    private void CheckSystemStop()
+    {
+        if (stopVideoAt != null && stopVideoAt.TimePassed(_timeSystem.Now))
+        {
+            if (!hastakenbreak)
+            {
+                _timeSystem.StartBreak();
+                transform.position = stopVideoAt.Pos;
+                _box.gameObject.SetActive(true);
+                hastakenbreak = true;
+            }
+            else if (!_timeSystem.IsTakingBreak)
+            {
+                MissedBox();
+                _box.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -134,7 +156,7 @@ public class Hitbox : MonoBehaviour
 
             if (_index >= _positionList.Count)
             {
-                if (!hasbeenselected) _box.IsNotHit();
+                if (!hasbeenselected) MissedBox();
                 _box.gameObject.SetActive(false);
                 _nextPosition = null;
             }
@@ -155,23 +177,27 @@ public class Hitbox : MonoBehaviour
         _currentPositon = null;
         hasbeenselected = false;
         hastakenbreak = false;
+        hasResult = false;
         _box.ResetResults();
     }
 
-    public void HighlightBox()
+    public void HitThisBox()
     {
-        
-    }
+        if (hit_this_box) _box.IsCorrect(hitbox_feedback);
+        else _box.IsWrong(hitbox_feedback);
 
-    public void SelectBox()
-    {
-        _box.IsHit();
         hasbeenselected = true;
+        hasResult = true;
     }
 
-    public void ResetBox()
+    public void MissedBox()
     {
+        Debug.Log("Missed " + hitbox_feedback);
+        if (hit_this_box) _box.IsWrong(hitbox_feedback);
+        else _box.IsCorrect(hitbox_feedback);
 
+        hasbeenselected = false;
+        hasResult = true;
     }
 }
 

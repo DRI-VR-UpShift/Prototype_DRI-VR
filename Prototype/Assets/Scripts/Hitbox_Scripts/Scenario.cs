@@ -5,12 +5,11 @@ using UnityEngine.Video;
 
 public class Scenario : MonoBehaviour
 {
-    [SerializeField]
-    private VideoClip _clip;
     public VideoClip Clip
     {
         get { return _clip; }
     }
+    [SerializeField] private VideoClip _clip;
 
     private Hitbox[] hitboxList;
 

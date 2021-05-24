@@ -24,20 +24,11 @@ public class TimeSystem : MonoBehaviour
     }
     #endregion
 
-    [SerializeField]
-    private bool _hasUI = true;
-
-    [SerializeField]
-    private GameObject timerObject;
-
-    [SerializeField]
-    private Text txt_Timer;
-
-    [SerializeField]
-    private VideoPlayer _vPlayer;
-
-    [SerializeField]
-    private Input_Manager input;
+    [SerializeField] private bool _hasUI = true;
+    [SerializeField] private GameObject timerObject;
+    [SerializeField] private Text txt_Timer;
+    [SerializeField] private VideoPlayer _vPlayer;
+    [SerializeField] private Input_Manager input;
 
     private Scenario currentScenario;
 
@@ -55,6 +46,8 @@ public class TimeSystem : MonoBehaviour
     }
     private bool _takebreak = false;
 
+    private List<Hitbox> hitboxlist_takingbreak = new List<Hitbox>();
+
     // To stop at this time
     private float _endTime = 120;
 
@@ -65,22 +58,20 @@ public class TimeSystem : MonoBehaviour
     }
     private float _countSeconds = 0;
 
-    private TimeStamp _currentTime = new TimeStamp(0, 0);
     public TimeStamp Now
     {
         get { return _currentTime; }
     }
+    private TimeStamp _currentTime = new TimeStamp(0, 0);
 
-    private float currentStep = 0;
     public float TimeStep
     {
         get { return currentStep; }
     }
+    private float currentStep = 0;
 
-    [SerializeField]
-    public GameObject _btn_menu;
-    [SerializeField]
-    private Screen_Results result_menu;
+    [SerializeField] private GameObject _btn_menu;
+    [SerializeField] private Screen_Results result_menu;
 
     void Start()
     {
@@ -155,14 +146,36 @@ public class TimeSystem : MonoBehaviour
     {
         _takebreak = true;
 
+        hitboxlist_takingbreak = new List<Hitbox>();
+
+        Hitbox[] list = GameObject.FindObjectsOfType<Hitbox>();
+        foreach(Hitbox item in list)
+        {
+            if (item.TakenBreak && !item.HasResult) hitboxlist_takingbreak.Add(item);
+        }
+
         if (_videoIsRunning) _vPlayer.Pause();
     }
 
-    public void StopBreak()
+    public void Hit(Hitbox hitbox)
     {
-        _takebreak = false;
+        if(IsTakingBreak)
+        {
+            if (hitboxlist_takingbreak.Count <= 0) return;
 
-        if(_videoIsRunning) _vPlayer.Play();
+            foreach(Hitbox box in hitboxlist_takingbreak)
+            {
+                if (box == hitbox) hitbox.HitThisBox();
+                else box.MissedBox();
+            }
+
+            _takebreak = false;
+            if (_videoIsRunning) _vPlayer.Play();
+        }
+        else
+        {
+            if (hitbox != null) hitbox.HitThisBox();
+        }
     }
 
     private void StartTimer(float endTime)
