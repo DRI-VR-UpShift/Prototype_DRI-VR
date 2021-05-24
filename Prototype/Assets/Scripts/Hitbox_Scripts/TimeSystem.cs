@@ -154,7 +154,11 @@ public class TimeSystem : MonoBehaviour
         Hitbox[] list = GameObject.FindObjectsOfType<Hitbox>();
         foreach(Hitbox item in list)
         {
-            if (item.TakenBreak && !item.HasResult) hitboxlist_takingbreak.Add(item);
+            if (!item.TakenBreak)
+            {
+                Debug.Log(item.name + " is taking break");
+                hitboxlist_takingbreak.Add(item);
+            }
         }
 
         if (_videoIsRunning) _vPlayer.Pause();
@@ -164,10 +168,9 @@ public class TimeSystem : MonoBehaviour
     {
         if(IsTakingBreak)
         {
-            if (hitboxlist_takingbreak.Count <= 0) return;
-
             foreach(Hitbox box in hitboxlist_takingbreak)
             {
+                Debug.Log("In the break " + box.name);
                 if (box == hitbox) hitbox.HitThisBox();
                 else box.MissedBox();
             }

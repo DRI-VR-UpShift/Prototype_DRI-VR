@@ -69,12 +69,6 @@ public class Hitbox : MonoBehaviour
     }
     private bool hastakenbreak = false;
 
-    public bool HasResult
-    {
-        get { return hasResult; }
-    }
-    private bool hasResult = false;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -177,7 +171,6 @@ public class Hitbox : MonoBehaviour
         _currentPositon = null;
         hasbeenselected = false;
         hastakenbreak = false;
-        hasResult = false;
         _box.ResetResults();
     }
 
@@ -187,17 +180,15 @@ public class Hitbox : MonoBehaviour
         else _box.IsWrong(hitbox_feedback);
 
         hasbeenselected = true;
-        hasResult = true;
     }
 
     public void MissedBox()
     {
-        Debug.Log("Missed " + hitbox_feedback);
-        if (hit_this_box) _box.IsWrong(hitbox_feedback);
-        else _box.IsCorrect(hitbox_feedback);
+        //Debug.Log("Missed " + hitbox_feedback);
+        //if (hit_this_box) _box.IsWrong(hitbox_feedback);
+        //else _box.IsCorrect(hitbox_feedback);
 
-        hasbeenselected = false;
-        hasResult = true;
+        //hasbeenselected = false;
     }
 }
 
