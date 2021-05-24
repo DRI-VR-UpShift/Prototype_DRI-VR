@@ -9,7 +9,7 @@ public class Hitbox : MonoBehaviour
     [HideInInspector] public bool IsPlaying = false;
 
     [Header("The hitbox")]
-    [SerializeField] private Result_hitbox _box;
+    [SerializeField] private Result _box;
 
     public bool ShouldHit
     {
