@@ -204,6 +204,7 @@ MonoBehaviour:
   txt_Timer: {fileID: 3467345156157731754}
   _vPlayer: {fileID: 0}
   input: {fileID: 0}
+  ui_results: {fileID: 7972081283698855491}
   _btn_menu: {fileID: 0}
   result_menu: {fileID: 0}
 --- !u!1 &3467345155073682850

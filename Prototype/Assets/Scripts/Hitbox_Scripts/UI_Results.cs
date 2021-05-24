@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class UI_Results : MonoBehaviour
 {
+    public Mode CurrentMode
+    {
+        set { currentMode = value; }
+    }
+    private Mode currentMode = null;
+
     [SerializeField] private GameObject correct_field;
     [SerializeField] private Text txt_correct;
     [SerializeField] private GameObject wrong_field;
@@ -25,26 +31,29 @@ public class UI_Results : MonoBehaviour
 
     public void ShowResult(bool isCorrect, string explanation)
     {
-        Debug.Log("Result " + isCorrect + " " + explanation);
-        if (isShowingMsg && isCorrect) return;
-
-        if (currentMessage != null) currentMessage.SetActive(false);
-
-        if(isCorrect)
+        if (currentMode is ModeFeedbackDuring)
         {
-            currentMessage = correct_field;
-            txt_correct.text = explanation;
-        }
-        else
-        {
-            currentMessage = wrong_field;
-            txt_wrong.text = explanation;
-        }
+            Debug.Log("Result " + isCorrect + " " + explanation);
+            if (isShowingMsg && isCorrect) return;
 
-        currentMessage.SetActive(true);
+            if (currentMessage != null) currentMessage.SetActive(false);
 
-        time = 0;
-        isShowingMsg = true;
+            if (isCorrect)
+            {
+                currentMessage = correct_field;
+                txt_correct.text = explanation;
+            }
+            else
+            {
+                currentMessage = wrong_field;
+                txt_wrong.text = explanation;
+            }
+
+            currentMessage.SetActive(true);
+
+            time = 0;
+            isShowingMsg = true;
+        }
     }
 
     // Update is called once per frame

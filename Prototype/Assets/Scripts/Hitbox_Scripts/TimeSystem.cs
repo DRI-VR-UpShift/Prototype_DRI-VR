@@ -31,6 +31,7 @@ public class TimeSystem : MonoBehaviour
     [SerializeField] private Input_Manager input;
 
     private Scenario currentScenario;
+    [SerializeField] private UI_Results ui_results;
 
     // Variables needed for timer
     public bool IsRunning
@@ -140,6 +141,8 @@ public class TimeSystem : MonoBehaviour
 
         currentScenario = scenario;
         currentScenario.StartScenario(thisMode);
+
+        ui_results.CurrentMode = thisMode;
     }
 
     public void StartBreak()
