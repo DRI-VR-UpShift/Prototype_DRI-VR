@@ -7,22 +7,39 @@ public class Mode
     
 }
 
-public class ModePlayerstop : Mode
+// How does the video stop?
+public class ModeStop : Mode
 {
 
 }
 
-public class ModeSystemstop : Mode
+public class ModePlayerstop : ModeStop
 {
 
 }
 
-public class ModeFeedbackAfter : Mode
+public class ModeSystemstop : ModeStop
 {
 
 }
 
-public class ModeFeedbackDuring : Mode
+public class ModeNonStop : ModeStop
+{
+
+}
+
+// When is the feedback given?
+public class ModeFeedback : Mode
+{
+
+}
+
+public class ModeFeedbackAfter : ModeFeedback
+{
+
+}
+
+public class ModeFeedbackDuring : ModeFeedback
 {
 
 }

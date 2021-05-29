@@ -1,10 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Unity.VectorGraphics;
 using UnityEngine.Video;
 
 public class Scenario : MonoBehaviour
 {
+    public string Name
+    {
+        get { return _name; }
+    }
+    [SerializeField] private string _name;
+
+    public string Description
+    {
+        get { return _description; }
+    }
+    [SerializeField] private string _description;
+
+    public Image Img
+    {
+        get { return _img; }
+    }
+    [SerializeField] private Image _img;
+
+    public List<WeatherClip> WeahterClips
+    {
+        get { return listVideoClips; }
+    }
+    [SerializeField] List<WeatherClip> listVideoClips = new List<WeatherClip>();
+
     public VideoClip Clip
     {
         get { return _clip; }
@@ -51,5 +77,35 @@ public class Scenario : MonoBehaviour
         {
             item.StartHitbox(scenarioMode);
         }
+    }
+
+    public bool SetWeatherVideo(WeatherClip clip)
+    {
+        _clip = clip.Clip;
+
+        return (_clip != null);
+    }
+}
+
+[System.Serializable]
+public class WeatherClip
+{
+    [SerializeField] private string _weather;
+
+    public Sprite Icon
+    {
+        get { return image; }
+    }
+    [SerializeField] private Sprite image;
+
+    public VideoClip Clip
+    {
+        get { return _clip; }
+    }
+    [SerializeField] private VideoClip _clip;
+
+    public bool IsWeather(string weather)
+    {
+        return (_weather.Equals(weather));
     }
 }
