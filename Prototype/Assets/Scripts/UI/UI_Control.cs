@@ -55,7 +55,7 @@ public class UI_Control : MonoBehaviour
     public void ShowResults(Scenario thisScenario)
     {
         screen_results.gameObject.SetActive(true);
-        screen_results.ShowResults(thisScenario);
+        screen_results.ShowResults();
     }
 
     public void RetryMode()

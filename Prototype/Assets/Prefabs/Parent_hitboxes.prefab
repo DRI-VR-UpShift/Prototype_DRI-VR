@@ -58,8 +58,10 @@ MonoBehaviour:
   _img: {fileID: 0}
   listVideoClips:
   - _weather: Sunny
+    image: {fileID: 3286163911610860551, guid: 5f4e0bdddbe8008498f3ed57c9c6a539, type: 3}
     _clip: {fileID: 32900000, guid: 0586eb5284d0fb84d893e29fc14acd54, type: 3}
   - _weather: Fog
+    image: {fileID: 3286163911610860551, guid: 23ac8b9aed4527f40a865951f8bfda5f, type: 3}
     _clip: {fileID: 32900000, guid: b622a02fc4402fb46ace9a479a946962, type: 3}
   _clip: {fileID: 32900000, guid: 0586eb5284d0fb84d893e29fc14acd54, type: 3}
 --- !u!1001 &248478397

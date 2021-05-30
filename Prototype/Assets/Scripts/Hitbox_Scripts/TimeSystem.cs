@@ -28,7 +28,12 @@ public class TimeSystem : MonoBehaviour
     [SerializeField] private GameObject timerObject;
     [SerializeField] private Text txt_Timer;
     [SerializeField] private VideoPlayer _vPlayer;
+
     [SerializeField] private Input_Manager input;
+    [SerializeField] private VRInput_Manager vr_hand;
+    [SerializeField] private LineRenderer hand_renderer;
+    [SerializeField] private LaserPointer pointer;
+    [SerializeField] private LineRenderer pointer_renderer;
 
     private Scenario currentScenario;
     [SerializeField] private UI_Feedback ui_feedback;
@@ -72,7 +77,7 @@ public class TimeSystem : MonoBehaviour
     private float currentStep = 0;
 
     [SerializeField] private UI_Control ui_control;
-    [SerializeField] private UI_Results result_menu;
+    [SerializeField] private UI_InGame ui_ingame;
 
     void Start()
     {
@@ -99,7 +104,7 @@ public class TimeSystem : MonoBehaviour
             if (_hasUI) txt_Timer.text = _currentTime.ToString();
 
             // Check if end time is reached
-            if(_countSeconds >= _endTime)
+            if(_countSeconds >= _endTime || _videoIsRunning && _countSeconds >= (_endTime - 1))
             {
                 Debug.Log("Reached end video");
 
@@ -117,10 +122,17 @@ public class TimeSystem : MonoBehaviour
                     ui_control.ShowResults(currentScenario);
                 }
 
-                if (result_menu != null)
+                if (ui_ingame != null)
                 {
-                    result_menu.ShowResults(currentScenario);
-                    result_menu.gameObject.SetActive(true);
+                    ui_ingame.gameObject.SetActive(false);
+                }
+
+                if(vr_hand != null)
+                {
+                    vr_hand.enabled = false;
+                    hand_renderer.enabled = false;
+                    pointer.enabled = true;
+                    pointer_renderer.enabled = true;
                 }
             }
         }
@@ -147,12 +159,21 @@ public class TimeSystem : MonoBehaviour
 
     public void ResetScenario(Scenario scenario, ModeStop modeStop, ModeFeedback modeFeedback)
     {
-        input.CurrentMode = modeStop;
+        if (input != null) input.CurrentMode = modeStop;
+        else if (vr_hand != null)
+        {
+            vr_hand.enabled = true;
+            hand_renderer.enabled = true;
+            vr_hand.CurrentMode = modeStop;
+            pointer.enabled = false;
+            pointer_renderer.enabled = false;
+        }
 
         currentScenario = scenario;
         currentScenario.StartScenario(modeStop, modeFeedback);
 
         ui_feedback.CurrentMode = modeFeedback;
+        if (modeFeedback is ModeFeedbackDuring) ui_ingame.gameObject.SetActive(true);
 
         _countSeconds = 0;
     }

@@ -205,7 +205,7 @@ MonoBehaviour:
   _vPlayer: {fileID: 0}
   input: {fileID: 0}
   ui_feedback: {fileID: 7972081283698855491}
-  _btn_menu: {fileID: 0}
+  ui_control: {fileID: 0}
   result_menu: {fileID: 0}
 --- !u!1 &3467345155073682850
 GameObject:
@@ -301,7 +301,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3467345155165842651
 RectTransform:
   m_ObjectHideFlags: 0

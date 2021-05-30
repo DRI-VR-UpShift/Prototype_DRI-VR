@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Input_Manager : MonoBehaviour
 {
-    private bool _canUseScript;
-    private TimeSystem _timeSystem;
+    protected bool _canUseScript;
+    protected TimeSystem _timeSystem;
 
     [SerializeField]
-    private LayerMask hitboxMask;
+    protected LayerMask hitboxMask;
     
     public ModeStop CurrentMode
     {
@@ -16,7 +16,7 @@ public class Input_Manager : MonoBehaviour
     }
     private ModeStop currentMode;
 
-    private void Start()
+    public virtual void Start()
     {
         _timeSystem = FindObjectOfType<TimeSystem>();
         if (_timeSystem == null)
@@ -26,17 +26,17 @@ public class Input_Manager : MonoBehaviour
         }
     }
 
-    void Update()
+    public virtual void Update()
     {
         if (_canUseScript || currentMode == null) return;
 
-        if (_timeSystem.IsRunning && Input.GetMouseButtonDown(0))
+        if(_timeSystem.IsRunning && Input.GetMouseButtonDown(0))
         {
             if (currentMode is ModePlayerstop && !_timeSystem.IsTakingBreak)
             {
                 _timeSystem.StartBreak();
             }
-            else if((currentMode is ModePlayerstop || currentMode is ModeSystemstop) && _timeSystem.IsTakingBreak)
+            else if ((currentMode is ModePlayerstop || currentMode is ModeSystemstop) && _timeSystem.IsTakingBreak)
             {
                 SelectHitbox();
             }
@@ -47,7 +47,7 @@ public class Input_Manager : MonoBehaviour
         }
     }
 
-    public void SelectHitbox()
+    public virtual void SelectHitbox()
     {
         Hitbox box = null;
 

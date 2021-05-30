@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UI_InGame : MonoBehaviour
 {
+    public static UI_InGame instance;
+
     [SerializeField] private Text txt_correct;
     [SerializeField] private Text txt_wrong;
 
@@ -18,19 +20,15 @@ public class UI_InGame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-    }
+        instance = this;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        SetStatus(0);
     }
 
     public void UpdateUI()
     {
         txt_correct.text = "CORRECT: " + Scores.Correct;
-        txt_wrong.text = "WRONG: " + Scores.Correct;
+        txt_wrong.text = "WRONG: " + Scores.Wrong;
 
         float percentage = Scores.Correct / Scores.Total;
         sl_process.value = percentage;

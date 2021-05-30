@@ -135,11 +135,15 @@ public static class Scores
     {
         correct++;
         total++;
+
+        UI_InGame.instance.UpdateUI();
     }
 
     public static void AddWrong()
     {
         wrong++;
         total++;
+
+        UI_InGame.instance.UpdateUI();
     }
 }

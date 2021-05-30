@@ -16,9 +16,9 @@ public class UI_Results : MonoBehaviour
     public void ShowResults()
     {
         txt_correct.text = "CORRECT: " + Scores.Correct;
-        txt_wrong.text = "WRONG: " + Scores.Correct;
+        txt_wrong.text = "WRONG: " + Scores.Wrong;
 
-        float percentage = (score.totalHasHit + score.totalNotHit) / (score.totalShouldNotHit + score.totalShouldHit);
+        float percentage = Scores.Correct / Scores.Total;
         img_Score.fillAmount = percentage;
     }
 
