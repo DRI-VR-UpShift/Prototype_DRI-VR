@@ -150,7 +150,7 @@ public class TimeSystem : MonoBehaviour
         input.CurrentMode = modeStop;
 
         currentScenario = scenario;
-        currentScenario.StartScenario(modeStop);
+        currentScenario.StartScenario(modeStop, modeFeedback);
 
         ui_feedback.CurrentMode = modeFeedback;
 

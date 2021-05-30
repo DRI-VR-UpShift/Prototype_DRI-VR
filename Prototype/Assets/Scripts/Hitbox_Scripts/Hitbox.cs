@@ -9,7 +9,7 @@ public class Hitbox : MonoBehaviour
     [HideInInspector] public bool IsPlaying = false;
 
     [Header("The hitbox")]
-    [SerializeField] private Result _box;
+    [SerializeField] private Result _boxResult;
 
     public bool ShouldHit
     {
@@ -79,14 +79,14 @@ public class Hitbox : MonoBehaviour
             _canUseScript = false;
         }
 
-        if(_box == null)
+        if(_boxResult == null)
         {
             Debug.LogError(name + " has no box attached to it");
             _canUseScript = false;
         }
         else
         {
-            _box.gameObject.SetActive(false);
+            _boxResult.gameObject.SetActive(false);
         }
 
         if(_positionList.Count <= 0)
@@ -119,13 +119,13 @@ public class Hitbox : MonoBehaviour
             {
                 _timeSystem.StartBreak();
                 transform.position = stopVideoAt.Pos;
-                _box.gameObject.SetActive(true);
+                _boxResult.gameObject.SetActive(true);
                 hastakenbreak = true;
             }
             else if (!_timeSystem.IsTakingBreak)
             {
                 MissedBox();
-                _box.gameObject.SetActive(false);
+                _boxResult.gameObject.SetActive(false);
             }
         }
     }
@@ -151,33 +151,33 @@ public class Hitbox : MonoBehaviour
             if (_index >= _positionList.Count)
             {
                 if (!hasbeenselected) MissedBox();
-                _box.gameObject.SetActive(false);
+                _boxResult.gameObject.SetActive(false);
                 _nextPosition = null;
             }
             else NextPosition = _positionList[_index];
         }
         else if (_currentPositon.TimePassed(_timeSystem.Now))
         {
-            _box.gameObject.SetActive(true);
+            _boxResult.gameObject.SetActive(true);
 
             timestep += _timeSystem.TimeStep / timeToReach;
             transform.position = Vector3.Lerp(_currentPositon.Pos, _nextPosition.Pos, timestep);
         }
     }
 
-    public void StartHitbox(ModeStop mStop)
+    public void StartHitbox(ModeStop mStop, ModeFeedback mFeedback)
     {
         modeStop = mStop;
         _currentPositon = null;
         hasbeenselected = false;
         hastakenbreak = false;
-        _box.ResetResults();
+        _boxResult.ResetResults(mFeedback);
     }
 
     public void HitThisBox()
     {
-        if (hit_this_box) _box.IsCorrect(hitbox_feedback);
-        else _box.IsWrong(hitbox_feedback);
+        if (hit_this_box) _boxResult.IsCorrect(hitbox_feedback);
+        else _boxResult.IsWrong(hitbox_feedback);
 
         hasbeenselected = true;
     }

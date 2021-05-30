@@ -13,32 +13,12 @@ public class UI_Results : MonoBehaviour
 
     [SerializeField] Image img_Score;
 
-    public void ShowResults(Scenario scenario)
+    public void ShowResults()
     {
-        int totalShouldHit = 0;
-        int totalHasHit = 0;
+        txt_correct.text = "CORRECT: " + Scores.Correct;
+        txt_wrong.text = "WRONG: " + Scores.Correct;
 
-        int totalShouldNotHit = 0;
-        int totalNotHit = 0;
-
-        foreach (Hitbox box in scenario.listHitbox)
-        {
-            if (box.ShouldHit)
-            {
-                if (box.HasBeenHit) totalHasHit++;
-                totalShouldHit++;
-            }
-            else
-            {
-                if (!box.HasBeenHit) totalNotHit++;
-                totalShouldNotHit++;
-            }
-        }
-
-        txt_correct.text = ("Should have hit: " + totalHasHit + " / " + totalShouldHit);
-        txt_wrong.text = ("Should not have hit: " + totalNotHit + " / " + totalShouldNotHit);
-
-        float percentage = (totalHasHit + totalNotHit) / (totalShouldNotHit + totalShouldHit);
+        float percentage = (score.totalHasHit + score.totalNotHit) / (score.totalShouldNotHit + score.totalShouldHit);
         img_Score.fillAmount = percentage;
     }
 

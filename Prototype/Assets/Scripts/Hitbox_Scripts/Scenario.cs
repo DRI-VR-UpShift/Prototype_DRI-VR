@@ -57,12 +57,14 @@ public class Scenario : MonoBehaviour
         if (_clip != null) endtime = (float)_clip.length;
     }
 
-    public void StartScenario(ModeStop modeStop)
+    public void StartScenario(ModeStop modeStop, ModeFeedback modeFeedback)
     {
         foreach (Hitbox item in hitboxList)
         {
-            item.StartHitbox(modeStop);
+            item.StartHitbox(modeStop, modeFeedback);
         }
+
+        Scores.Reset();
     }
 
     public bool SetWeatherVideo(WeatherClip clip)
@@ -99,5 +101,45 @@ public class WeatherClip
     public bool IsWeather(string weather)
     {
         return (_weather.Equals(weather));
+    }
+}
+
+public static class Scores
+{
+    public static int Total
+    {
+        get { return total; }
+    }
+    private static int total = 0;
+
+    public static int Correct
+    {
+        get { return correct; }
+    }
+    private static int correct = 0;
+
+    public static int Wrong
+    {
+        get { return wrong; }
+    }
+    private static int wrong = 0;
+
+    public static void Reset()
+    {
+        total = 0;
+        correct = 0;
+        wrong = 0;
+    }
+
+    public static void AddCorrect()
+    {
+        correct++;
+        total++;
+    }
+
+    public static void AddWrong()
+    {
+        wrong++;
+        total++;
     }
 }
