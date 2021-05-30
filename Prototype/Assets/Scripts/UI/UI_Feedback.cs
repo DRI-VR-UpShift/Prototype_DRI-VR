@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class UI_Feedback : MonoBehaviour
 {
-    public Mode CurrentMode
+    public ModeFeedback CurrentMode
     {
         set { currentMode = value; }
     }
-    private Mode currentMode = null;
+    private ModeFeedback currentMode = null;
 
     [SerializeField] private GameObject correct_field;
     [SerializeField] private Text txt_correct;

@@ -71,7 +71,7 @@ public class TimeSystem : MonoBehaviour
     }
     private float currentStep = 0;
 
-    [SerializeField] private GameObject _btn_menu;
+    [SerializeField] private UI_Control ui_control;
     [SerializeField] private UI_Results result_menu;
 
     void Start()
@@ -88,8 +88,10 @@ public class TimeSystem : MonoBehaviour
         if((_timerIsRunning || _videoIsRunning) && !_takebreak)
         {
             float lastcoundseconds = _countSeconds;
+
             if (_videoIsRunning) _countSeconds = (float)_vPlayer.time;
             if(_timerIsRunning) _countSeconds += Time.deltaTime;
+
             currentStep = _countSeconds - lastcoundseconds;
 
             _currentTime = new TimeStamp(_countSeconds);
@@ -99,6 +101,8 @@ public class TimeSystem : MonoBehaviour
             // Check if end time is reached
             if(_countSeconds >= _endTime)
             {
+                Debug.Log("Reached end video");
+
                 _timerIsRunning = false;
                 _videoIsRunning = false;
 
@@ -107,24 +111,30 @@ public class TimeSystem : MonoBehaviour
                     timerObject.gameObject.SetActive(false);
                 }
 
-                if(result_menu != null)
+                if (ui_control != null)
                 {
-                    result_menu.ShowResults(currentScenario.Correct, currentScenario.Total);
+                    ui_control.gameObject.SetActive(true);
+                    ui_control.ShowResults(currentScenario);
+                }
+
+                if (result_menu != null)
+                {
+                    result_menu.ShowResults(currentScenario);
                     result_menu.gameObject.SetActive(true);
                 }
             }
         }
     }
 
-    public void StartTime(Mode thisMode, Scenario thisScenario)
+    public void StartTime(Scenario thisScenario, ModeStop modeStop, ModeFeedback modeFeedback)
     {
         StartTimer(60);
         _timerIsRunning = true;
 
-        StartHitboxes(thisMode, thisScenario);
+        ResetScenario(thisScenario, modeStop, modeFeedback);
     }
 
-    public void StartVideo(Mode thisMode, Scenario thisScenario)
+    public void StartVideo(Scenario thisScenario, ModeStop modeStop, ModeFeedback modeFeedback)
     {
         _vPlayer.clip = thisScenario.Clip;
         _vPlayer.Play();
@@ -132,17 +142,19 @@ public class TimeSystem : MonoBehaviour
         StartTimer(thisScenario.Time);
         _videoIsRunning = true;
 
-        StartHitboxes(thisMode, thisScenario);
+        ResetScenario(thisScenario, modeStop, modeFeedback);
     }
 
-    public void StartHitboxes(Mode thisMode, Scenario scenario)
+    public void ResetScenario(Scenario scenario, ModeStop modeStop, ModeFeedback modeFeedback)
     {
-        input.CurrentMode = thisMode;
+        input.CurrentMode = modeStop;
 
         currentScenario = scenario;
-        currentScenario.StartScenario(thisMode);
+        currentScenario.StartScenario(modeStop);
 
-        ui_feedback.CurrentMode = thisMode;
+        ui_feedback.CurrentMode = modeFeedback;
+
+        _countSeconds = 0;
     }
 
     public void StartBreak()

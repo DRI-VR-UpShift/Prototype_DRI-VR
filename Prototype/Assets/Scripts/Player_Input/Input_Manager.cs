@@ -10,11 +10,11 @@ public class Input_Manager : MonoBehaviour
     [SerializeField]
     private LayerMask hitboxMask;
     
-    public Mode CurrentMode
+    public ModeStop CurrentMode
     {
         set { currentMode = value; }
     }
-    private Mode currentMode;
+    private ModeStop currentMode;
 
     private void Start()
     {
@@ -34,15 +34,13 @@ public class Input_Manager : MonoBehaviour
         {
             if (currentMode is ModePlayerstop && !_timeSystem.IsTakingBreak)
             {
-                Debug.Log("Taking break");
                 _timeSystem.StartBreak();
             }
             else if((currentMode is ModePlayerstop || currentMode is ModeSystemstop) && _timeSystem.IsTakingBreak)
             {
-                Debug.Log("Select box");
                 SelectHitbox();
             }
-            else if (currentMode is ModeFeedbackAfter || currentMode is ModeFeedbackDuring)
+            else if (currentMode is ModeNonStop)
             {
                 SelectHitbox();
             }

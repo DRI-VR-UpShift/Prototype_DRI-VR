@@ -37,30 +37,16 @@ public class Scenario : MonoBehaviour
     }
     [SerializeField] private VideoClip _clip;
 
+    public Hitbox[] listHitbox
+    {
+        get { return hitboxList; }
+    }
     private Hitbox[] hitboxList;
 
     private float endtime = 0;
     public float Time
     {
         get { return endtime; }
-    }
-
-    public int Total
-    {
-        get { return hitboxList.Length; }
-    }
-
-    public int Correct
-    {
-        get
-        {
-            int correct = 0;
-            foreach(Hitbox box in hitboxList)
-            {
-                if (box.HasBeenHit) correct++;
-            }
-            return correct;
-        }
     }
 
     // Start is called before the first frame update
@@ -71,19 +57,25 @@ public class Scenario : MonoBehaviour
         if (_clip != null) endtime = (float)_clip.length;
     }
 
-    public void StartScenario(Mode scenarioMode)
+    public void StartScenario(ModeStop modeStop)
     {
         foreach (Hitbox item in hitboxList)
         {
-            item.StartHitbox(scenarioMode);
+            item.StartHitbox(modeStop);
         }
     }
 
     public bool SetWeatherVideo(WeatherClip clip)
     {
         _clip = clip.Clip;
+        
+        if (_clip != null)
+        {
+            endtime = (float)_clip.length;
+            return true;
+        }
 
-        return (_clip != null);
+        return false;
     }
 }
 

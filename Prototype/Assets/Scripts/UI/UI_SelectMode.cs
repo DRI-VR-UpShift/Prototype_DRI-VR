@@ -12,6 +12,8 @@ public class UI_SelectMode : MonoBehaviour
     private ModeFeedback mFeedback = null;
     private bool hasWeather = false;
 
+    [SerializeField] private UI_Control ui_control;
+
     [Header("Stop mode")]
     [SerializeField] private Transform parent_stopmodetoggles;
     [SerializeField] private SVGImage bg_btn_stopSystem;
@@ -28,7 +30,7 @@ public class UI_SelectMode : MonoBehaviour
     [SerializeField] private Transform parent_weathertoggles;
 
     [Header("Start btn")]
-    [SerializeField] private GameObject btn_startScenario;
+    [SerializeField] private Button btn_startScenario;
 
     [Header("Btn colors")]
     [SerializeField] private Color normal_color;
@@ -54,6 +56,9 @@ public class UI_SelectMode : MonoBehaviour
             UI_weatherBtn toggle = btn.GetComponent<UI_weatherBtn>();
             toggle.SetWeatherClip(this, clip);
         }
+
+        btn_startScenario.onClick.AddListener(SetMode);
+        btn_startScenario.gameObject.SetActive(false);
     }
 
     private void ResetButtons(Transform parent)
@@ -137,11 +142,16 @@ public class UI_SelectMode : MonoBehaviour
     {
         if(mStopping != null && mFeedback != null && hasWeather)
         {
-            btn_startScenario.SetActive(true);
+            btn_startScenario.gameObject.SetActive(true);
         }
         else
         {
-            btn_startScenario.SetActive(false);
+            btn_startScenario.gameObject.SetActive(false);
         }
+    }
+
+    public void SetMode()
+    {
+        ui_control.SelectMode(mStopping, mFeedback);
     }
 }

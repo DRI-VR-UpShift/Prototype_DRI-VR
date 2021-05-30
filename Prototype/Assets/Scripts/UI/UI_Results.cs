@@ -5,33 +5,70 @@ using UnityEngine.UI;
 
 public class UI_Results : MonoBehaviour
 {
-    [SerializeField] private Text txt_Correct;
-    [SerializeField] private Text txt_Total;
+    [SerializeField] private Text txt_correct;
+    [SerializeField] private Text txt_wrong;
 
-    [SerializeField]
-    UI_ChooseMode chooseMenu;
+    [SerializeField] UI_ChooseMode chooseMenu;
+    [SerializeField] UI_Control ui_control;
 
-    public void ShowResults(int correct, int total)
+    [SerializeField] Image img_Score;
+
+    public void ShowResults(Scenario scenario)
     {
-        txt_Correct.text = "" + correct;
-        txt_Total.text = "" + total;
+        int totalShouldHit = 0;
+        int totalHasHit = 0;
+
+        int totalShouldNotHit = 0;
+        int totalNotHit = 0;
+
+        foreach (Hitbox box in scenario.listHitbox)
+        {
+            if (box.ShouldHit)
+            {
+                if (box.HasBeenHit) totalHasHit++;
+                totalShouldHit++;
+            }
+            else
+            {
+                if (!box.HasBeenHit) totalNotHit++;
+                totalShouldNotHit++;
+            }
+        }
+
+        txt_correct.text = ("Should have hit: " + totalHasHit + " / " + totalShouldHit);
+        txt_wrong.text = ("Should not have hit: " + totalNotHit + " / " + totalShouldNotHit);
+
+        float percentage = (totalHasHit + totalNotHit) / (totalShouldNotHit + totalShouldHit);
+        img_Score.fillAmount = percentage;
     }
 
     public void Btn_Retry()
     {
-        chooseMenu.RetryMode();
-        gameObject.SetActive(false);
+        if (chooseMenu != null)
+        {
+            chooseMenu.RetryMode();
+            gameObject.SetActive(false);
+        }
+        else if(ui_control != null) ui_control.RetryMode();
     }
 
     public void Btn_ChangeMode()
     {
-        chooseMenu.gameObject.SetActive(true);
-        gameObject.SetActive(false);
+        if (chooseMenu != null)
+        {
+            chooseMenu.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+        }
+        else if (ui_control != null) ui_control.ChangeMode();
     }
 
     public void Btn_MainMenu()
     {
-        chooseMenu.gameObject.SetActive(true);
-        gameObject.SetActive(false);
+        if (chooseMenu != null)
+        {
+            chooseMenu.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+        }
+        else if (ui_control != null) ui_control.MainMenu();
     }
 }

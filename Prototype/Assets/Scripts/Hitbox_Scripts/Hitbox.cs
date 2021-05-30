@@ -61,7 +61,7 @@ public class Hitbox : MonoBehaviour
     }
     private bool hasbeenselected = false;
 
-    private Mode currentMode = null;
+    private ModeStop modeStop = null;
 
     public bool TakenBreak
     {
@@ -101,7 +101,7 @@ public class Hitbox : MonoBehaviour
     {
         if (!_canUseScript || !_timeSystem.IsRunning) return;
 
-        if(currentMode is ModeSystemstop)
+        if(modeStop is ModeSystemstop)
         {
             CheckSystemStop();
         }
@@ -165,9 +165,9 @@ public class Hitbox : MonoBehaviour
         }
     }
 
-    public void StartHitbox(Mode thisMode)
+    public void StartHitbox(ModeStop mStop)
     {
-        currentMode = thisMode;
+        modeStop = mStop;
         _currentPositon = null;
         hasbeenselected = false;
         hastakenbreak = false;

@@ -15,12 +15,16 @@ public class UI_ChooseMode : MonoBehaviour
     private float time_duration;
 
     [SerializeField]
+    private Toggle toggle_feedback;
+
+    [SerializeField]
     private GameObject parent_Scenarios;
     private Scenario[] scenarios;
     [SerializeField]
     private Dropdown dropdown_scenarios;
 
-    private Mode currentMode = null;
+    private ModeStop modeStop = null;
+    private ModeFeedback modeFeedback = null;
 
     // Start is called before the first frame update
     void Start()
@@ -43,47 +47,44 @@ public class UI_ChooseMode : MonoBehaviour
         dropdown_scenarios.AddOptions(options);
     }
 
-    private void StartTimer(Mode thisMode)
+    private void StartTimer(ModeStop mStop)
     {
         if (!_canUseScript) return;
 
-        currentMode = thisMode;
+        modeStop = mStop;
+
+        if (toggle_feedback.isOn) modeFeedback = new ModeFeedbackDuring();
+        else modeFeedback = new ModeFeedbackAfter();
 
         int index = dropdown_scenarios.value;
         Scenario thisScenario = scenarios[index];
 
-        if (toggle_video.isOn) time.StartVideo(thisMode, thisScenario);
-        else time.StartTime(thisMode, thisScenario);
+        if (toggle_video.isOn) time.StartVideo(thisScenario, modeStop, modeFeedback);
+        else time.StartTime(thisScenario, modeStop, modeFeedback);
 
         gameObject.SetActive(false);
     }
 
     public void StartPlayerStopMode()
     {
-        Mode thisMode = new ModePlayerstop();
+        ModeStop thisMode = new ModePlayerstop();
         StartTimer(thisMode);
     }
 
     public void StartSystemStopMode()
     {
-        Mode thisMode = new ModeSystemstop();
+        ModeStop thisMode = new ModeSystemstop();
         StartTimer(thisMode);
     }
 
-    public void StartFeedbackAfterMode()
+    public void StartNonStopMode()
     {
-        Mode thisMode = new ModeFeedbackAfter();
-        StartTimer(thisMode);
-    }
-
-    public void StartFeedbackDuringMode()
-    {
-        Mode thisMode = new ModeFeedbackDuring();
+        ModeStop thisMode = new ModeNonStop();
         StartTimer(thisMode);
     }
 
     public void RetryMode()
     {
-        if(currentMode != null) StartTimer(currentMode);
+        if(modeStop != null) StartTimer(modeStop);
     }
 }
