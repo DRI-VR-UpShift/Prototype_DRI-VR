@@ -3004,6 +3004,8 @@ MonoBehaviour:
   screen_selectScenario: {fileID: 27281882}
   screen_selectMode: {fileID: 1286507394}
   screen_results: {fileID: 5368058277715316566}
+  laserPointer: {fileID: 1821630033}
+  line_pointer: {fileID: 1821630034}
 --- !u!1 &654960678
 GameObject:
   m_ObjectHideFlags: 0
